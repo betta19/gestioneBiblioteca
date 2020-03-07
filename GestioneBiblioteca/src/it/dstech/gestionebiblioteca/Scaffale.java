@@ -8,21 +8,39 @@ public class Scaffale implements Serializable {
 
 	private List<Libro> listaLibri;
 	private String genere;
+	private int quantitaLibri;
 
-	public Scaffale(String genere) {
+	public Scaffale(String genere, int qnt) {
 		super();
+		this.quantitaLibri = qnt;
 		this.listaLibri = new ArrayList<>();
 		this.genere = genere;
 	}
-
-	public boolean mettiLibro(Libro libro) {
-		this.listaLibri.add(libro);
-		return true;
+	
+	
+	public Scaffale(String genere) {
+		super();
+		this.genere = genere;
 	}
 
-	public boolean togliLibro(Libro libro) {
-		this.listaLibri.remove(libro);
-		return true;
+	
+
+	public boolean aggiungiLibroAScaffale(Libro l) {
+		if (!this.getListaLibri().contains(l)) {
+			this.getListaLibri().add(l);
+			return true;
+		}
+	return false;
+
+	}
+
+	public boolean rimuoviLibroDaScaffale(Libro l) {
+		if (this.getListaLibri().contains(l)) {
+			this.getListaLibri().remove(l);
+			return true;
+		}
+	return false;
+		
 	}
 
 	public List<Libro> getListaLibri() {
@@ -41,9 +59,20 @@ public class Scaffale implements Serializable {
 		this.genere = genere;
 	}
 
+	
+	public int getQuantitaLibri() {
+		return quantitaLibri;
+	}
+
+	public void setQuantitaLibri(int quantitaLibri) {
+		this.quantitaLibri = quantitaLibri;
+	}
+
 	@Override
 	public String toString() {
-		return "Scaffale [listaLibri=" + listaLibri + ", genere=" + genere + "]";
+		return "Scaffale [listaLibri=" + listaLibri + ", genere=" + genere + ", quantitaLibri=" + quantitaLibri + "]";
 	}
+
+	
 
 }

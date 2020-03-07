@@ -1,5 +1,6 @@
 package it.dstech.gestionebiblioteca;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,173 +14,217 @@ import java.util.Scanner;
 
 public class GestioneBiblioteca {
 
-public static void main(String[] args) {
+	public static void main(String[] args) {
 
-	try {
-		Scanner scanner = new Scanner(System.in);
+		try {
+			Scanner scanner = new Scanner(System.in);
 
-		VenditaLibro libreria = caricaLibreria();
+			VenditaLibro libreria = caricaLibreria();
+
+			while (true) {
+
+				
+
+				menu();
+				int scelta = scanner.nextInt();
+				scanner.nextLine();
+				switch (scelta) {
+
+				case 1: {
+					
+					aggiungiLibroAScaffale(scanner, creaScaffale(scanner, libreria), libreria);
+					break;
+
+				}
+				case 2: {
+					creaCliente(scanner);
+					vendiLibroACliente(scanner, libreria);
+					break;
+				}
+
+				case 3: {
+					stampaLibriDalPiuAlMenoVenduto(libreria);
+					break;
+				}
+
+				case 4: {
+					stampaListaScaffali(libreria);
+					break;
+				}
+				case 5: {
+					stampaListaClienti(libreria);
+					break;
+				}
+				case 6: {
+					salvaLibreria(libreria);
+					break;
+				}
+				default: {
+					salvaLibreria(libreria);
+					System.exit(0);
+				}
+				}
+
+			}
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void stampaLibriDalPiuAlMenoVenduto(VenditaLibro negozio) {
 		
+
+		List<Libro> lista = negozio.getLibriAcquistatiDaiClienti();
+		Collections.sort(lista, new Comparator<Libro>() {
+
+			@Override
+			public int compare(Libro o1, Libro o2) {
+
+				if (o1.getQuantitaVenduta() > o2.getQuantitaVenduta())
+					return -1;
+				if (o1.getQuantitaVenduta() < o2.getQuantitaVenduta())
+					return 1;
+				return 0;
+			}
+
+		});
+		System.out.println(lista);
+	}
+
+	public static void menu() {
+		System.out.println("#############################à");
+		System.out.println("1. crea libro e aggiungilo allo scaffale scegliendone il genere");
+		System.out.println("2. crea cliente e vendigli libri");
+		System.out.println("3. stampa libri dal più venduto al meno venduto");
+		System.out.println("4. stampa lista scaffali");
+		System.out.println("5. stampa lista clienti");
+		System.out.println("6. SALVA!");
 		
-		while (true) {
 
-			Scaffale sc = null;
-			Libro libro= null;
-			
-			menu();
-			int scelta = scanner.nextInt();
-			scanner.nextLine();
-			switch (scelta) {
-			case 1: {
-				libro = aggiungiLibro(scanner, libreria);
-				break;
-
-			}
-			
-			case 2 : {
-				sc.togliLibro(libro);
-				break;
-			}
-
-			case 3: {
-				
-				break;
-
-			}
-			case 4: {
-				
-				break;
-			}
-
-			case 5: {
-			
-				break;
-			}
-			case 13: {
-				
-				break;
-			}
-			case 14: {
-				salvaLibreria(libreria);
-				break;
-			}
-			default: {
-				salvaLibreria(libreria);
-				System.exit(0);
-			}
-			}
-
-		}
-	} catch (IOException | ClassNotFoundException e) {
-		e.printStackTrace();
 	}
-}
 
-
-
-private static void stampaClientiCheHannoSpesoDiPiu(VenditaLibro negozio, boolean primi) { 
-	/*cambiare il comparator per libro+venduto*/
-
-	List<Cliente> listaClienti = negozio.getListaClienti();
-	Collections.sort(listaClienti, new Comparator<Cliente>() {
-
-		@Override
-		public int compare(Cliente o1, Cliente o2) {
-			double costoTotaleO1 = 0.0;
-			for (Libro l : o1.getLibriAcquistati()) {
-				costoTotaleO1 += l.getCosto() * l.getQuantitaLibri();
-			}
-			double costoTotaleO2 = 0.0;
-			for (Libro l: o2.getLibriAcquistati()) {
-				costoTotaleO2 += l.getCosto() * l.getQuantitaLibri();
-			}
-			if (costoTotaleO1 < costoTotaleO2)
-				return -1;
-			if (costoTotaleO1 > costoTotaleO2)
-				return 1;
-			return 0;
-		}
-	});
-
-	if (primi) {
-		// stampo i primi
-		for (int i = 0; i < 5; i++) {
-			System.out.println(listaClienti.get(i));
-		}
-
-	} else {
-//		stampo ultimi
-		for (int i = listaClienti.size() - 1; i > listaClienti.size() - 6; i--) {
-			System.out.println(listaClienti.get(i));
+	public static void stampaListaClienti(VenditaLibro negozio) {
+		for (Cliente c : negozio.getListaClienti()) {
+			System.out.println(c);
 		}
 	}
-}
-
-private static void menu() {
-	System.out.println("1. aggiungi libro");
-	System.out.println("2. rimuovi libro");
-	System.out.println("3. cambia costo prodotto");
-	System.out.println("4. crea cliente");
-	System.out.println("5. vendi prodotto");
-	System.out.println("6. 5 prodotti pių cari");
-	System.out.println("7. 5 prodotti pių economici");
-	System.out.println("8. 5 clienti che hanno speso di pių");
-	System.out.println("9. 3 clienti per spesa pių economica");
-	System.out.println("10. 3 prodotti pių venduti");
-	System.out.println("11. 3 prodotti meno venduti");
-	System.out.println("12. Stampa lista prodotti");
-	System.out.println("13. stampa lista clienti");
-	System.out.println("14. SALVA!");
-
-}
-
-private static void stampaListaClienti(VenditaLibro negozio) {
-	for (Cliente c : negozio.getListaClienti()) {
-		System.out.println(c);
-	}
-}
-
-private static void stampaListaLibri(VenditaLibro negozio) {
-	for (Libro l : negozio.getListaLibri()) {
-		System.out.println(l);
-	}
-}
-
-private static Libro aggiungiLibro(Scanner scanner, VenditaLibro negozio) {
-	System.out.println("Inserisci l'id del libro");
-	String id = scanner.nextLine();
 	
-	System.out.println("Inserisci l' autore");
-	String nome = scanner.nextLine();
-	System.out.println("Inserisci il costo del libro");
-	double costo = scanner.nextDouble();
-	scanner.nextLine();
-	System.out.println("Inserisci quanti libri ci sono");
-	int qta = scanner.nextInt();
-	scanner.nextLine();
-	Libro libro = new Libro(id, nome, costo, qta);
-	negozio.aggiungiLibro(libro);
-	return libro;
-}
-
-private static void salvaLibreria(VenditaLibro n) throws IOException {
-	File file = new File("libreria.xd");
-	FileOutputStream out = new FileOutputStream(file);
-	ObjectOutputStream stream = new ObjectOutputStream(out);
-	stream.writeObject(n);
-	stream.close();
-}
-
-private static VenditaLibro caricaLibreria() throws IOException, ClassNotFoundException {
-
-	File file = new File("libreria.xd");
-	if (!file.exists()) {
-		return new VenditaLibro();
+	public static void stampaListaScaffali(VenditaLibro negozio) {
+		for (Scaffale s : negozio.getListaScaffale()) {
+			System.out.println(s);
+		}
 	}
-	FileInputStream in = new FileInputStream(file);
-	ObjectInputStream stream = new ObjectInputStream(in);
-	VenditaLibro n = (VenditaLibro) stream.readObject();
-	stream.close();
-	return n;
-}
+	
+	
+	
+
+	public static Scaffale creaScaffale(Scanner scanner, VenditaLibro l) {
+		System.out.println("Inserisci il genere dello scaffale");
+		String genere = scanner.nextLine();
+		Scaffale scaffale = new Scaffale(genere);
+		l.getListaScaffale().add(scaffale);
+		return scaffale;
+
+	}
+
+	public static Cliente creaCliente(Scanner scanner) {
+		System.out.println("Dammi il cognome del cliente");
+		String co = scanner.nextLine();
+		System.out.println("Dammi l'id della tessera");
+		String id = scanner.nextLine();
+
+		return new Cliente(co, id);
+
+	}
+
+	public static void vendiLibroACliente(Scanner scanner, VenditaLibro negozio) {
+
+		
+		
+		for (int i = 0; i < negozio.getListaScaffale().size(); i++) {
+			System.out.println(" [ " + i + " ]" + negozio.getListaScaffale().get(i));
+
+		}
+		System.out.println("da quale scaffale vuoi prendere il libro?");
+		int scegliScaffale = scanner.nextInt();
+		scanner.nextLine();
+		negozio.getListaScaffale().get(scegliScaffale);
+		
+		
+	
+		for (int i = 0; i < negozio.getListaScaffale().get(scegliScaffale).getListaLibri().size(); i++) {
+			System.out.println("[ " +i+ " ]" +negozio.getListaScaffale().get(scegliScaffale).getListaLibri().get(i));
+		}
+		
+		System.out.println("quale libro vuole acquistare dallo scaffale scelto, dammi l'indice?");
+		int scegliLibro = scanner.nextInt();
+		scanner.nextLine();
+	
+		System.out.println("quanti ne vuoi acquistare?");
+		int quantita = scanner.nextInt();
+		scanner.nextLine();
+		
+		
+		if (negozio.checkVendita(negozio.getListaScaffale().get(scegliLibro), quantita)) {
+			
+			
+			negozio.vendiLibro(negozio.getListaScaffale().get(scegliLibro), quantita);
+		}
+
+	}
+
+	public static void aggiungiLibroAScaffale(Scanner scanner,Scaffale s, VenditaLibro l) {
+		
+		Libro libro =	aggiungiLibro(scanner);
+		s.aggiungiLibroAScaffale(libro);
+		l.aggiungiScaffaleANegozio(s);
+		System.out.println(l.getListaScaffale());
+			
+			
+			System.out.println("quanti di questo libro ne vuoi aggiungere?");
+			int qnt = scanner.nextInt();
+			scanner.nextLine();
+			s.setQuantitaLibri(qnt);
+			
+			
+			
+	}
+
+	public static Libro aggiungiLibro(Scanner scanner) {
+		
+		System.out.println("Inserisci l'id del libro");
+		String id = scanner.nextLine();
+
+		System.out.println("Inserisci l'autore");
+		String nome = scanner.nextLine();
+		System.out.println("Inserisci il costo del libro");
+		double costo = scanner.nextDouble();
+		scanner.nextLine();
+		
+		
+		return new Libro(id, nome, costo);
+		
+		
+	}
+
+	public static void salvaLibreria(VenditaLibro n) throws IOException {
+		File file = new File("libreria.ad");
+		FileOutputStream out = new FileOutputStream(file);
+		ObjectOutputStream stream = new ObjectOutputStream(out);
+		stream.writeObject(n);
+		stream.close();
+	}
+
+	public static VenditaLibro caricaLibreria() throws IOException, ClassNotFoundException {
+
+		File file = new File("libreria.ad");
+		if (!file.exists()) {
+			return new VenditaLibro();
+		}
+		FileInputStream in = new FileInputStream(file);
+		ObjectInputStream stream = new ObjectInputStream(in);
+		VenditaLibro n = (VenditaLibro) stream.readObject();
+		stream.close();
+		return n;
+	}
 }

@@ -8,26 +8,40 @@ public class Cliente implements Serializable {
 
 	private String cognome;
 	private String idTessera;
-	private List<Libro> libriAcquistati;
+	private List<Libro> libriAcquistatiDaiClienti;
 
 	public Cliente(String cognome, String idTessera) {
 		super();
 		this.cognome = cognome;
 		this.idTessera = idTessera;
-		this.libriAcquistati = new ArrayList<>();
+		this.libriAcquistatiDaiClienti = new ArrayList<>();
 
 	}
-
-	public boolean compraLibro(Libro libro) {
-		this.libriAcquistati.add(libro);
+	public boolean compraLibro(Libro libro ) {
+		
+		this.libriAcquistatiDaiClienti.add(libro);
 		return true;
 
 	}
+
 
 	public boolean rimuoviLibro(Libro libro) {
-		this.libriAcquistati.remove(libro);
+		this.libriAcquistatiDaiClienti.remove(libro);
 		return true;
 	}
+	
+
+	public List<Libro> getLibriAcquistatiDaiClienti() {
+		return libriAcquistatiDaiClienti;
+	}
+
+
+
+	public void setLibriAcquistatiDaiClienti(List<Libro> libriAcquistatiDaiClienti) {
+		this.libriAcquistatiDaiClienti = libriAcquistatiDaiClienti;
+	}
+
+
 
 	public String getCognome() {
 		return cognome;
@@ -45,13 +59,6 @@ public class Cliente implements Serializable {
 		this.idTessera = idTessera;
 	}
 
-	public List<Libro> getLibriAcquistati() {
-		return libriAcquistati;
-	}
-
-	public void setLibriAcquistati(List<Libro> libriAcquistati) {
-		this.libriAcquistati = libriAcquistati;
-	}
 
 	@Override
 	public int hashCode() {
@@ -78,10 +85,14 @@ public class Cliente implements Serializable {
 		return true;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "Cliente [cognome=" + cognome + ", idTessera=" + idTessera + ", libriAcquistati=" + libriAcquistati
-				+ "]";
+		return "Cliente [cognome=" + cognome + ", idTessera=" + idTessera + ", libriAcquistatiDaiClienti="
+				+ libriAcquistatiDaiClienti + "]";
 	}
+
+	
 
 }

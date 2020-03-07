@@ -6,20 +6,52 @@ import java.util.List;
 
 public class VenditaLibro implements Serializable {
 
-	private List<Libro> listaLibri;
+	
 	private List<Cliente> listaClienti;
+	private List<Libro> libriAcquistatiDaiClienti;
+	private List<Scaffale> listaScaffale;
 
 	public VenditaLibro() {
 		super();
-		this.listaLibri = new ArrayList<>();
+	
 		this.listaClienti = new ArrayList<>();
+		this.libriAcquistatiDaiClienti = new ArrayList<>();
+		this.listaScaffale = new ArrayList<>();
+	}
+	
+
+
+	public List<Scaffale> getListaScaffale() {
+		return this.listaScaffale;
 	}
 
-	public boolean vendiLibroACliente(Cliente c, Libro l) {
 
+
+	public void setListaScaffale(List<Scaffale> listaScaffale) {
+		this.listaScaffale = listaScaffale;
+	}
+
+
+
+
+	public boolean vendiLibroACliente(Cliente c, Libro libro, Scaffale s, int q) {
+
+		if (checkVendita(s,  q)) {
+			
+		
 		int posizioneCliente = this.getListaClienti().indexOf(c);
 		Cliente cliente = this.getListaClienti().get(posizioneCliente);
-		return cliente.compraLibro(l);
+		return cliente.compraLibro(libro);
+	}
+		System.out.println("non abbiamo abbastanza libri da vendere");
+		return false;
+	}
+	public List<Libro> getLibriAcquistatiDaiClienti() {
+		return libriAcquistatiDaiClienti;
+	}
+
+	public void setLibriAcquistatiDaiClienti(List<Libro> libriAcquistatiDaiClienti) {
+		this.libriAcquistatiDaiClienti = libriAcquistatiDaiClienti;
 	}
 
 	public boolean togliLibroACliente(Cliente c, Libro l) {
@@ -29,17 +61,9 @@ public class VenditaLibro implements Serializable {
 		return cliente.rimuoviLibro(l);
 
 	}
+	
+	
 
-	public Libro dammiLibro(String codice) {
-		for (Libro libro : listaLibri) {
-			if (libro.getId() == codice) {
-				return libro;
-			}
-
-		}
-		return null;
-
-	}
 
 	public boolean aggiungiCliente(Cliente c) {
 		if (this.getListaClienti().contains(c)) {
@@ -61,47 +85,41 @@ public class VenditaLibro implements Serializable {
 
 	}
 
-	public boolean checkVendita(Libro l, int quantita) {
+	public boolean checkVendita(Scaffale s, int quantita) {
 
-		int posizione = getListaLibri().indexOf(l);
-		Libro libro = getListaLibri().get(posizione);
-		if (libro.getQuantitaLibri() > quantita) {
+		int posizione = getListaScaffale().indexOf(s);
+		Scaffale scaffale = getListaScaffale().get(posizione);
+		if (scaffale.getQuantitaLibri() > quantita) {
 			return true;
 		}
 		System.out.println("Libri non disponibili");
 		return false;
 
 	}
-
-	public boolean aggiungiLibro(Libro l) {
-		if (!this.getListaLibri().contains(l)) {
-			this.getListaLibri().add(l);
+	
+	
+	public boolean aggiungiScaffaleANegozio(Scaffale s) {
+		if (!this.getListaScaffale().contains(s)) {
+			this.getListaScaffale().add(s);
 			return true;
 		}
-		int posizione = getListaLibri().indexOf(l);
-		Libro libro = getListaLibri().get(posizione);
-		libro.setQuantitaLibri(libro.getQuantitaLibri() + l.getQuantitaLibri());
+		int posizione = getListaScaffale().indexOf(s);
+		Scaffale scaffale = getListaScaffale().get(posizione);
+		scaffale.setQuantitaLibri(scaffale.getQuantitaLibri() + s.getQuantitaLibri());
 		return true;
 
 	}
 
-	public boolean vendiLibro(Libro l, int quantita) {
+	public boolean vendiLibro(Scaffale l, int quantita) {
 
-		int posizione = getListaLibri().indexOf(l);
-		Libro libro = getListaLibri().get(posizione);
-		libro.setQuantitaLibri(libro.getQuantitaLibri() - quantita);
+		int posizione = getListaScaffale().indexOf(l);
+		Scaffale scaf = getListaScaffale().get(posizione);
+		scaf.setQuantitaLibri(scaf.getQuantitaLibri() - quantita);
 		return true;
 
 	}
 
-	public List<Libro> getListaLibri() {
-		return listaLibri;
-	}
-
-	public void setListaLibri(List<Libro> listaLibri) {
-		this.listaLibri = listaLibri;
-	}
-
+	
 	public List<Cliente> getListaClienti() {
 		return listaClienti;
 	}
@@ -110,9 +128,14 @@ public class VenditaLibro implements Serializable {
 		this.listaClienti = listaClienti;
 	}
 
+
+
 	@Override
 	public String toString() {
-		return "VenditaLibro [listaLibri=" + listaLibri + ", listaClienti=" + listaClienti + "]";
+		return "VenditaLibro [ listaClienti=" + listaClienti
+				+ ", libriAcquistatiDaiClienti=" + libriAcquistatiDaiClienti + ", listaScaffale=" + listaScaffale + "]";
 	}
+
+	
 
 }
