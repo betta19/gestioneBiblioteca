@@ -8,6 +8,14 @@ public class Libro implements Serializable {
 	private String autore;
 	private double costo;
 	private int quantitaLibri;
+	
+	public Libro(String id, String autore, double costo, int quantitaLibri) {
+		super();
+		this.id = id;
+		this.autore = autore;
+		this.costo = costo;
+		this.quantitaLibri = quantitaLibri;
+	}
 
 	public String getId() {
 		return id;
